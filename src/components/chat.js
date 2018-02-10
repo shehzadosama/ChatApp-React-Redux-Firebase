@@ -131,15 +131,15 @@ class Chat extends Component {
         console.log(this.state.editState)
         return (
             <div>
-                {this.props.login === false ? <CircularProgress  size={150} thickness={10}  /> :
+                {this.props.login === false ? <CircularProgress size={150} thickness={10} /> :
                     < div > <h1>Hello Chat {this.props.currentUser.username}</h1> <button onClick={this.signOut.bind(this)}>SIGNOUT</button>
                         <h1><u>All Users</u></h1>
                         {
 
                             this.props.allUsers.map((user, index) => {
-                                return (
-                                    <h2 key={index} onClick={this.setRecipient.bind(this, user.uid, this.props.currentUser.uid, user.username)}>{user.username}</h2>
-                                )
+                                return (<div key={index} >
+                                    <span style={{ cursor: 'pointer' }} onClick={this.setRecipient.bind(this, user.uid, this.props.currentUser.uid, user.username)}><b>{user.username}</b></span> <br />
+                                </div>)
                             })
                         }
 
