@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { changeRecipientUID, checkLogin, signOut, sendMessage, editMessage, deleteMessage, updateMessage, seenUpdate } from '../store/action/action'
+import { changeRecipientUID, checkLoginAndFetchData, checkLogin, signOut, sendMessage, editMessage, deleteMessage, updateMessage, seenUpdate } from '../store/action/action'
 import { connect } from 'react-redux';
 import ChatBox from './chatbox';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class Chat extends Component {
     constructor(props) {
@@ -16,7 +17,10 @@ class Chat extends Component {
         this.seenUpdate = this.seenUpdate.bind(this);
     }
     componentWillMount() {
-        this.props.checkLogin()
+        this.props.checkLoginAndFetchData()
+        // if (this.props.login) {
+        //     this.props.fetchData()
+        // }
     }
     signOut() {
         this.props.signOut();
@@ -127,72 +131,75 @@ class Chat extends Component {
         console.log(this.state.editState)
         return (
             <div>
-                <h1>Hello Chat {this.props.currentUser.username}</h1> <button onClick={this.signOut.bind(this)}>SIGNOUT</button>
-                <h1><u>All Users</u></h1>
-                {
+                {this.props.login === false ? <CircularProgress  size={150} thickness={10}  /> :
+                    < div > <h1>Hello Chat {this.props.currentUser.username}</h1> <button onClick={this.signOut.bind(this)}>SIGNOUT</button>
+                        <h1><u>All Users</u></h1>
+                        {
 
-                    this.props.allUsers.map((user, index) => {
-                        return (
-                            <h2 key={index} onClick={this.setRecipient.bind(this, user.uid, this.props.currentUser.uid, user.username)}>{user.username}</h2>
-                        )
-                    })
-                }
-
-                <hr />
-                <div>
-
-                    {this.props.msgs.map((msg, ind) => {
-                        // console.log(new Date(msg.timestamp).toLocaleTimeString())
-                        let time = new Date(msg.timestamp).toLocaleTimeString();
-                        console.log(msg.receiverID, this.props.currentUser.uid);
-                        // console.log((Date.now() - msg.timestamp) / 1000);
-                        // this.setState({
-                        //     time: Date.now() - msg.timestamp / 1000
-                        // })
-                        if (msg.receiverID === this.props.currentUser.uid) {
-                            this.seenUpdate(msg.id, ind)
-                            // console.log('seen update')
-
-
+                            this.props.allUsers.map((user, index) => {
+                                return (
+                                    <h2 key={index} onClick={this.setRecipient.bind(this, user.uid, this.props.currentUser.uid, user.username)}>{user.username}</h2>
+                                )
+                            })
                         }
 
-                        return (
-                            // msg.receiverID === this.props.currentUser.uid ? this.seenUpdate().bind(this) : null
-                            msg.senderID === this.props.currentUser.uid ?
-                                <div key={ind} style={{ border: '1px solid black' }}>
-                                    <h2 >Sender  name:{msg.senderName}</h2><br />
-                                    <span >message:{msg.message}</span>
-                                    <br />
-                                    <span >seen:'{JSON.stringify(msg.seen)}'</span>
-                                    <br />
-                                    <span >time:{time}</span>
-                                    {(((Date.now() - msg.timestamp) / 1000) < 60) ?
-                                        <div> <button onClick={this.editMsg.bind(this, msg.id, ind, msg.timestamp)}>EDIT</button>
-                                            <button onClick={this.deleteMsg.bind(this, msg.id, msg.timestamp)}>DELETE</button>
-                                        </div> : null
-                                    }
-                                </div> :
+                        <hr />
+                        <div>
 
-                                <div key={ind}>
-                                    <h2 >Sender  name:{msg.senderName}</h2><br />
-                                    <span >message:{msg.message}</span>
-                                    <br />
-                                    <span >time:{time}</span>
-                                </div>
-                        )
-                    })}
+                            {this.props.msgs.map((msg, ind) => {
+                                // console.log(new Date(msg.timestamp).toLocaleTimeString())
+                                let time = new Date(msg.timestamp).toLocaleTimeString();
+                                console.log(msg.receiverID, this.props.currentUser.uid);
+                                // console.log((Date.now() - msg.timestamp) / 1000);
+                                // this.setState({
+                                //     time: Date.now() - msg.timestamp / 1000
+                                // })
+                                if (msg.receiverID === this.props.currentUser.uid) {
+                                    this.seenUpdate(msg.id, ind)
+                                    // console.log('seen update')
 
 
-                </div>
-                <input type="text" placeholder="Enter message" ref="msg" onChange={this._textAreaHandler.bind(this)}></input>
-                {this.state.editState ?
-                    <div>
-                        <button onClick={this.updateMessage.bind(this)}>UPDATE</button>
-                        <button onClick={this.closeEdit.bind(this)}>CANCEL</button>
+                                }
 
+                                return (
+                                    // msg.receiverID === this.props.currentUser.uid ? this.seenUpdate().bind(this) : null
+                                    msg.senderID === this.props.currentUser.uid ?
+                                        <div key={ind} style={{ border: '1px solid black' }}>
+                                            <h2 >Sender  name:{msg.senderName}</h2><br />
+                                            <span >message:{msg.message}</span>
+                                            <br />
+                                            <span >seen:'{JSON.stringify(msg.seen)}'</span>
+                                            <br />
+                                            <span >time:{time}</span>
+                                            {(((Date.now() - msg.timestamp) / 1000) < 60) ?
+                                                <div> <button onClick={this.editMsg.bind(this, msg.id, ind, msg.timestamp)}>EDIT</button>
+                                                    <button onClick={this.deleteMsg.bind(this, msg.id, msg.timestamp)}>DELETE</button>
+                                                </div> : null
+                                            }
+                                        </div> :
+
+                                        <div key={ind}>
+                                            <h2 >Sender  name:{msg.senderName}</h2><br />
+                                            <span >message:{msg.message}</span>
+                                            <br />
+                                            <span >time:{time}</span>
+                                        </div>
+                                )
+                            })}
+
+
+                        </div>
+                        <input type="text" placeholder="Enter message" ref="msg" onChange={this._textAreaHandler.bind(this)}></input>
+                        {this.state.editState ?
+                            <div>
+                                <button onClick={this.updateMessage.bind(this)}>UPDATE</button>
+                                <button onClick={this.closeEdit.bind(this)}>CANCEL</button>
+
+                            </div>
+                            :
+                            <button onClick={this.sendMessage.bind(this)}>send</button>
+                        }
                     </div>
-                    :
-                    <button onClick={this.sendMessage.bind(this)}>send</button>
                 }
             </div>
         )
@@ -206,8 +213,8 @@ function mapStateToProp(state) {
         allUsers: state.root.users,
         allMessages: state.root.messages,
         recipientID: state.root.recipientID,
-        msgs: state.root.msgs
-
+        msgs: state.root.msgs,
+        login: state.root.login
 
     })
 }
@@ -236,7 +243,10 @@ function mapDispatchToProp(dispatch) {
         }
         , seenUpdate: (msgId) => {
             dispatch(seenUpdate(msgId));
-        }
+        },
+        checkLoginAndFetchData: () => {
+            dispatch(checkLoginAndFetchData());
+        },
     })
 }
 export default connect(mapStateToProp, mapDispatchToProp)(Chat);

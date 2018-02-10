@@ -116,6 +116,47 @@ export function checkLogin() {
             let that = this;
             if (userId !== null) {
                 console.log('user is logged in')
+                // firebase.database().ref('users/').once('value')
+                //     .then((userData) => {
+                //         let allUsers = userData.val();
+
+                //         // let currentUserUid = firebase.auth().currentUser.uid;
+                //         console.log(allUsers)
+                //         console.log(userId)
+                //         let currentUser = allUsers[userId]
+                //         delete allUsers[userId];
+                //         console.log(allUsers)
+                //         let allUsersArr = [];
+                //         for (var key in allUsers) {
+                //             allUsersArr.push(allUsers[key]);
+                //         }
+                //         console.log(allUsersArr);
+                //         dispatch({ type: ActionTypes.ALLUSERS, payload: allUsersArr })
+                //         dispatch({ type: ActionTypes.CURRENTUSER, payload: currentUser })
+                //         history.push('/chat');                   
+                //     })
+                // dispatch({ type: ActionTypes.LOGIN, payload: true })
+                history.push('/chat');
+            } else {
+                console.log('no user is logged in');
+                dispatch({ type: ActionTypes.LOGIN, payload: true })
+
+            }
+        })
+    }
+}
+export function checkLoginAndFetchData() {
+    return dispatch => {
+        console.log('in check login')
+        let db = firebase.database();
+        firebase.auth().onAuthStateChanged(() => {
+            let userId = null;
+            let user = firebase.auth().currentUser;
+            if (user !== null) userId = user.uid
+            // console.log(userId);
+            let that = this;
+            if (userId !== null) {
+                console.log('user is logged in')
                 firebase.database().ref('users/').once('value')
                     .then((userData) => {
                         let allUsers = userData.val();
@@ -131,26 +172,13 @@ export function checkLogin() {
                             allUsersArr.push(allUsers[key]);
                         }
                         console.log(allUsersArr);
+                        dispatch({ type: ActionTypes.LOGIN, payload: true })
                         dispatch({ type: ActionTypes.ALLUSERS, payload: allUsersArr })
                         dispatch({ type: ActionTypes.CURRENTUSER, payload: currentUser })
                         history.push('/chat');
-                        // firebase.database().ref('message/').on("value", (messagesData) => {
-
-                        //     let messages = messagesData.val();
-                        //     // console.log(messagesData.key)
-                        //     // messages.id = messagesData.key;
-                        //     for (var key in messages) {
-
-                        //         messagesArr[key]=messages[key];
-
-                        //     }
-                        //     // messagesArr.push(messages)
-                        //     console.log(messages);
-                        //     console.log(messagesArr);
-                        //     dispatch({ type: ActionTypes.MESSAGES, payload: messagesArr })
-                        //     history.push('/chat');
-                        // })
                     })
+                // dispatch({ type: ActionTypes.LOGIN, payload: true })
+                // history.push('/chat');
             } else {
                 console.log('no user is logged in');
                 dispatch({ type: ActionTypes.LOGIN, payload: false })
@@ -159,7 +187,6 @@ export function checkLogin() {
         })
     }
 }
-
 
 export function signOut() {
     return dispatch => {

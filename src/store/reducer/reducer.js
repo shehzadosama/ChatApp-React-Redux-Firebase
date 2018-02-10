@@ -2,8 +2,8 @@ import ActionTypes from '../constant/constant';
 
 const INITIAL_STATE = {
     userName: 'Haider',
-    currentUser: null,
-    login: true,
+    currentUser: {},
+    login: false,
     users: [],
     messages: [],
     recipientID: '',

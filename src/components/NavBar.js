@@ -89,7 +89,6 @@ class Navbar extends Component {
             let that = this;
             if (userId !== null) {
                 db.ref('/users/' + userId).once('value', function (snapshot) {
-
                     that.setState({
                         type: snapshot.val().type,
                         active: true,
@@ -103,9 +102,6 @@ class Navbar extends Component {
 
 
     render() {
-        // console.log(this.state.type)
-        // console.log(this.state.drawerOpened)
-        // if (localStorage.getItem('activeUser') === "offline") 
         return (
             <div>
                 <MuiThemeProvider>
@@ -118,90 +114,10 @@ class Navbar extends Component {
                                     <Link to="/signup"> <FlatButton label="Register" style={style.button} default={true} /></Link>
                                 }    </span>
                         }
-
                     />
                 </MuiThemeProvider>
-                {/* <Drawer open={this.state.drawerOpened} docked={false} onRequestChange={(drawerOpened) => this.toggleDrawer()}>
-                    <MenuItem style={style.appBar}>Real Time Parking System</MenuItem>
-                    {this.state.type === 'user' ?
-                        <div>
-                            <MenuItem ><Link to="/User/ParkingLocations" style={style.list} onClick={this.toggleDrawer.bind(this)}>View Parking locations</Link></MenuItem>
-                            <Divider />
-                            <MenuItem ><Link to="/User/MyBookings" style={style.list} onClick={this.toggleDrawer.bind(this)}>View my bookings</Link></MenuItem>
-                            <Divider />
-                            <MenuItem ><Link to="/User/MyFeedbacks" style={style.list} onClick={this.toggleDrawer.bind(this)}>My feedbacks</Link></MenuItem>
-                            <Divider />
-                            <MenuItem><Link to="/User/SendFeedbacks" style={style.list} onClick={this.toggleDrawer.bind(this)}>Send feedbacks</Link></MenuItem>
-                            <Divider />
-                        </div>
-                        : this.state.type === 'admin' ?
-                            <div>
-                                <MenuItem  ><Link to="/Admin/AddParkingLocation" style={style.list} onClick={this.toggleDrawer.bind(this)}>Add Parking locations</Link></MenuItem>
-                                <Divider />
-                                <MenuItem><Link to="/Admin/ParkingLocations" style={style.list} onClick={this.toggleDrawer.bind(this)}>View Parking locations</Link></MenuItem>
-                                <Divider />
-                                <MenuItem ><Link to="/Admin/UsersList" style={style.list} onClick={this.toggleDrawer.bind(this)}>View All users</Link></MenuItem>
-                                <Divider />
-                                <MenuItem ><Link to="/Admin/AllBookings" style={style.list} onClick={this.toggleDrawer.bind(this)}>View All bookings</Link></MenuItem>
-                                <Divider />
-                                <MenuItem ><Link to="/Admin/UsersFeedback" style={style.list} onClick={this.toggleDrawer.bind(this)}>Users Feedback</Link></MenuItem>
-                                <Divider />
-                            </div>
-                            : null}
-                </Drawer> */}
-
-
-
-
             </div>
         )
-
-        // } else {
-        //     return (
-        //         <div>
-        //             <MuiThemeProvider>
-
-        //                 <AppBar title="Real Time Parking Sytem" showMenuIconButton={this.state.btn} onLeftIconButtonTouchTap={() => this._toggelDrawer()}
-        //                     iconElementRight={
-        //                         <span>
-        //                             {this.state.active ?
-        //                                 <mat.FlatButton label="SignOut" style={style.button} style={style.button} default={true} onClick={this.signOut.bind(this)} />
-        //                                 :
-        //                                 <Link to="/signup"> <mat.FlatButton label="Register" style={style.button} primary={true} /></Link>
-        //                             }
-        //                         </span>
-        //                     }
-        //                 />
-        //             </MuiThemeProvider>
-        //             <Drawer open={this.state.drawerOpened} docked={false} onRequestChange={(drawerOpened) => this._toggelDrawer()}>
-        //                 <MenuItem style={style.appBar}>Real Time Parking System</MenuItem>
-        //                 {this.state.type !== 'user' ?
-        //                     <div>
-        //                         <MenuItem><Link to="/addSlots" onClick={this._toggelDrawer.bind(this)}>Add Slots</Link></MenuItem>
-        //                         <Divider />
-        //                         <MenuItem><Link to="/location" onClick={this._toggelDrawer.bind(this)}>Locations</Link></MenuItem>
-        //                         <Divider />
-        //                         <MenuItem><Link to="/viewBooking" onClick={this._toggelDrawer.bind(this)}>View Bookings</Link></MenuItem>
-        //                         <Divider />
-        //                         <MenuItem ><Link to="/feedBacks" onClick={this._toggelDrawer.bind(this)}>Feedbacks</Link></MenuItem>
-        //                         <Divider />
-        //                     </div>
-        //                     :
-        //                     <div>
-        //                         <MenuItem><Link to="/location" onClick={this._toggelDrawer.bind(this)}>Book parking</Link></MenuItem>
-        //                         <Divider />
-        //                         <MenuItem><Link to="/myParking" onClick={this._toggelDrawer.bind(this)}>My parkings</Link></MenuItem>
-        //                         <Divider />
-        //                         <MenuItem><Link to="/feedbacks" onClick={this._toggelDrawer.bind(this)}>FeedBacks</Link></MenuItem>
-        //                         <Divider />
-        //                     </div>
-        //                 }
-        //             </Drawer>
-
-        //         </div>
-        //     )
-        // }
-
     }
 }
 export default Navbar

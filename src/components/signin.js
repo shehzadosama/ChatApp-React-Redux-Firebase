@@ -42,8 +42,8 @@ class Signin extends Component {
 
 
         this.signin = this.signin.bind(this);
-        this._onChangeEmail = this._onChangeEmail.bind(this);
-        this._onChangePassword = this._onChangePassword.bind(this);
+        // this._onChangeEmail = this._onChangeEmail.bind(this);
+        // this._onChangePassword = this._onChangePassword.bind(this);
 
     }
     componentWillMount() {
@@ -55,53 +55,38 @@ class Signin extends Component {
         this.setState({ open: !this.state.open });
     };
 
-
-
-
-
-
-
-
-    //         db.ref('/users/' + userId).once('value', function (snapshot) {
-
-    //             // that.setState({
-    //             //   type: snapshot.val().type,
-    //             //   loader: false
-    //             // })
-    //             let userType = snapshot.val().type;
-    //             if (userType === 'user') {
-    //                 that.props.history.push('/User');
-    //             } else if (userType === 'admin') {
-    //                 that.props.history.push('/Admin');
-    //             }
-    //         });
-    //     } else {
-    //     // console.log('user is not logged in')
-    //     that.setState({
-    //         loader: false
+    signin() {
+        if (this.state.email === '' && this.state.password === '') this.setState({ open: true, error: "All fields are required" });
+        else {
+            this.setState({ errorEmail: "", errorPassword: "" });
+            let user = {
+                email: this.state.email,
+                password: this.state.password
+            }
+            this.setState({
+                email: '',
+                password: ''
+            })
+            this.props.signinWithEmailPassword(user);
+        }
+    }
+    // _onChangeEmail(event) {
+    //     this.setState({
+    //         email: event.target.value
     //     })
     // }
-    //         })
-    //     }
-    signin() {
-        let user = {
-            email: this.state.email,
-            password: this.state.password
-        }
+    // _onChangePassword(event) {
+    //     this.setState({
+    //         password: event.target.value
+    //     })
+    // }
+    handleForm(labelState, error, ev) {
+        // console.log(ev.target.value)
+        let stmt = '';
+        if (ev.target.value === '') stmt = 'This field is required';
         this.setState({
-            email: '',
-            password: ''
-        })
-        this.props.signinWithEmailPassword(user);
-    }
-    _onChangeEmail(event) {
-        this.setState({
-            email: event.target.value
-        })
-    }
-    _onChangePassword(event) {
-        this.setState({
-            password: event.target.value
+            [labelState]: ev.target.value,
+            [error]: stmt
         })
     }
 
@@ -138,15 +123,14 @@ class Signin extends Component {
                     onRequestClose={this.handleDialog}
                 >{this.state.error}
                 </Dialog>
-                {this.props.login === true ? <CircularProgress size={80} thickness={5} /> :
-                    <div>
-
+                {this.props.login === false ? <CircularProgress size={150} thickness={10} /> :
+                    <div style={{ width: 600, margin: 'auto' }}>
                         <Paper style={style} zDepth={5}>
                             <h1 style={{ color: 'rgb(0, 188, 212)' }}>Login</h1>
 
                             <TextField
                                 onChange={
-                                    this._onChangeEmail.bind(this)
+                                    this.handleForm.bind(this, 'email', 'errorEmail')
 
                                 }
                                 errorText={this.state.errorEmail}
@@ -156,7 +140,7 @@ class Signin extends Component {
                             <br />
                             <PasswordField
                                 onChange={
-                                    this._onChangePassword.bind(this)
+                                    this.handleForm.bind(this, 'password', 'errorPassword')
 
                                 }
                                 floatingLabelText="Password"
